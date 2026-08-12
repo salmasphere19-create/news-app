@@ -91,70 +91,88 @@ body: ListView(
 
     // NEWS FROM API
 
-    if (newsdata.isNotEmpty)
-      ListView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: newsdata.length,
-        itemBuilder: (context, index) {
+if (newsdata.isEmpty)
+  const Center(
+    child: CircularProgressIndicator(),
+  )
+else
+  ListView.builder(
+    shrinkWrap: true,
+    physics: const NeverScrollableScrollPhysics(),
+    itemCount: newsdata.length,
+    itemBuilder: (context, index) {
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
 
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ArticleScreen(),
-                    ),
-                  );
-                },
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ArticleScreen(
+                    news: newsdata[index],
+                  ),
 
-                child: Image.network(
-                  newsdata[index].image_url ?? "",
-                  width: double.infinity,
-                  height: 210,
-                  fit: BoxFit.cover,
                 ),
-              ),
+              );
+            },
 
-              const SizedBox(height: 12),
-
-              // TITLE
-
-              Text(
-                newsdata[index].title ?? "",
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  height: 1.1,
-                ),
-              ),
-
-              const SizedBox(height: 8),
-
-              // DESCRIPTION
-
-              Text(
-                newsdata[index].description ?? "",
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey,
-                  height: 1.4,
-                ),
-              ),
-
-              const SizedBox(height: 25),
-
-              const Divider(),
-
-              const SizedBox(height: 25),
-            ],
-          );
-        },
+         
+         child: Image.network(
+  newsdata[index].image_url ?? "",
+  width: double.infinity,
+  height: 210,
+  fit: BoxFit.cover,
+  errorBuilder: (context, error, stackTrace) {
+    return Container(
+      width: double.infinity,
+      height: 210,
+      color: Colors.grey.shade200,
+      child: const Center(
+        child: Icon(
+          Icons.image_not_supported,
+          size: 50,
+          color: Colors.grey,
+        ),
       ),
+    );
+  },
+),
+          ),
+
+          const SizedBox(height: 12),
+
+          Text(
+            newsdata[index].title ?? "",
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              height: 1.1,
+            ),
+          ),
+
+          const SizedBox(height: 8),
+
+          Text(
+            newsdata[index].description ?? "",
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.grey,
+              height: 1.4,
+            ),
+          ),
+
+          const SizedBox(height: 25),
+
+          const Divider(),
+
+          const SizedBox(height: 25),
+        ],
+      );
+    },
+  ),
 
     // TOP STORIES
 
@@ -275,7 +293,12 @@ class NewsCard extends StatelessWidget {
 //  PAGE 
 
 class ArticleScreen extends StatelessWidget {
-  const ArticleScreen({super.key});
+  final resultsmodel news;
+
+  const ArticleScreen({
+    super.key,
+    required this.news,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -323,16 +346,26 @@ class ArticleScreen extends StatelessWidget {
             children: [
 
               // IMAGE 
-
               Image.network(
-                "https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=900&q=80",
-
-                width: double.infinity,
-                height: 240,
-
-                fit: BoxFit.cover,
-              ),
-
+            news.image_url ?? "",
+               width: double.infinity,
+                height: 210,
+                 fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                       width: double.infinity,
+                      height: 210,
+                       color: Colors.grey.shade200,
+                      child: const Center(
+                       child: Icon(
+                       Icons.image_not_supported,
+                        size: 50,
+                       color: Colors.grey,
+                        ),
+                         ),
+                           );
+                             },
+                              ),
               const SizedBox(height: 20),
 
               //  CATEGORY
@@ -350,15 +383,14 @@ class ArticleScreen extends StatelessWidget {
               const SizedBox(height: 10),
 
               //  TITLE
-
-              const Text(
-                "The Silent Resurgence of Brutalism in Modern Urban Centers",
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  height: 1.15,
-                ),
-              ),
+              Text(
+          news.title ?? "",
+          style: const TextStyle(
+           fontSize: 28,
+           fontWeight: FontWeight.bold,
+              height: 1.15,
+             ),
+           ),
 
               const SizedBox(height: 20),
 
@@ -412,12 +444,12 @@ class ArticleScreen extends StatelessWidget {
 
               // PARAGRAPH 
 
-              const Text(
-                "For decades, the imposing concrete monoliths of the mid-20th century were viewed as oppressive eyesores—monuments to a functionalist ideology that prioritized mass over humanity.",
-                style: TextStyle(
-                  fontSize: 16,
-                  height: 1.6,
-                ),
+              Text(
+           news.description ?? "",
+            style: const TextStyle(
+           fontSize: 16,
+            height: 1.6,
+             ),
               ),
 
               const SizedBox(height: 20),
@@ -571,23 +603,30 @@ class resultsmodel {
   });
 }
 final dio = Dio();
+
 Future<List<resultsmodel>> getnewsdata() async {
   final response = await dio.get(
-    'https://newsdata.io/api/1/latest?apikey=pub_3985965f55744f48ae452f6d0064b04f');
-  Map<String, dynamic> data = response.data;
-  List<dynamic> results =data['results'];
-  List<resultsmodel> resultsListmodel= [];
-  for(var result in results) {
-    resultsListmodel.add(
-      resultsmodel(
-        title: result['title'],
-        image_url: result['image_url'],
-        description: result['description'],
+    'https://newsdata.io/api/1/latest?apikey=pub_3985965f55744f48ae452f6d0064b04f',
+  );
 
-      ));
-      
+  Map<String, dynamic> data = response.data;
+
+  List<dynamic> results = data['results'];
+
+  List<resultsmodel> resultsListmodel = [];
+
+  for (var result in results) {
+    if (result['image_url'] != null) {
+      resultsListmodel.add(
+        resultsmodel(
+          title: result['title'],
+          image_url: result['image_url'],
+          description: result['description'],
+        ),
+      );
+    }
   }
+
   return resultsListmodel;
 }
-
 
