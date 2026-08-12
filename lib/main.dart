@@ -394,48 +394,6 @@ class ArticleScreen extends StatelessWidget {
 
               const SizedBox(height: 20),
 
-              // AUTHOR
-
-              Row(
-                children: [
-
-                  const CircleAvatar(
-                    radius: 22,
-
-                    backgroundImage: NetworkImage(
-                      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80",
-                    ),
-                  ),
-
-                  const SizedBox(width: 12),
-
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-
-                    children: const [
-
-                      Text(
-                        "Eleanor Vance",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                        ),
-                      ),
-
-                      SizedBox(height: 4),
-
-                      Text(
-                        "October 12, 2023 • 6 min read",
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-
               const SizedBox(height: 25),
 
               const Divider(),
@@ -451,92 +409,11 @@ class ArticleScreen extends StatelessWidget {
             height: 1.6,
              ),
               ),
-
-              const SizedBox(height: 20),
-
-              const Text(
-                "Yet, as we navigate an era defined by ephemeral digital spaces and lightweight glass-clad towers, a remarkable shift is occurring. Brutalism is returning as a deliberate aesthetic choice.",
-                style: TextStyle(
-                  fontSize: 16,
-                  height: 1.6,
-                ),
-              ),
-
+              const SizedBox(height: 25),      
               const SizedBox(height: 25),
-
-              //  QUOTE 
-
-              Container(
-                padding: const EdgeInsets.all(18),
-
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
-
-                  border: const Border(
-                    left: BorderSide(
-                      color: Colors.black,
-                      width: 4,
-                    ),
-                  ),
-                ),
-
-                child: const Text(
-                  "We are no longer building merely to house operations; we are constructing spaces in an age of digital noise.",
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontStyle: FontStyle.italic,
-                    height: 1.5,
-                  ),
-                ),
-              ),
-
               const SizedBox(height: 25),
-
-              const Text(
-                "The modern iteration of brutalism is driven by a new sensibility. Architects are seeking the expressive qualities of concrete while integrating greenery, natural light, and renewable materials.",
-                style: TextStyle(
-                  fontSize: 16,
-                  height: 1.6,
-                ),
-              ),
-
-              const SizedBox(height: 25),
-
-              // SECOND ARTICLE IMAGE 
-
-              Image.network(
-                "https://images.unsplash.com/photo-1511818966892-d7d671e672a2?auto=format&fit=crop&w=900&q=80",
-
-                width: double.infinity,
-                height: 200,
-
-                fit: BoxFit.cover,
-              ),
-
-              const SizedBox(height: 10),
-
-              const Text(
-                "Concrete architecture continues to inspire modern designers.",
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 12,
-                ),
-              ),
-
-              const SizedBox(height: 25),
-
-              const Text(
-                "Critics argue that this aesthetic remains inherently hostile, a stylistic fascination with the past rather than a meaningful response to contemporary needs. However, proponents see it as a return to honesty.",
-                style: TextStyle(
-                  fontSize: 16,
-                  height: 1.6,
-                ),
-              ),
-
               const SizedBox(height: 30),
-
               //  SHARE BUTTON 
-
               SizedBox(
                 width: double.infinity,
 
@@ -595,11 +472,13 @@ class resultsmodel {
   String? title;
   String? image_url;
   String? description;
+  
 
   resultsmodel({
     required this.title,
     required this.image_url,
     required this.description,
+    
   });
 }
 final dio = Dio();
